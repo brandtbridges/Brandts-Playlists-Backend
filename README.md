@@ -14,7 +14,7 @@ This approach avoids CORS and mixed‑content issues, keeps Plex tokens private,
 
 ---
 
-## How it works
+## How it works ([https://www.brandtbridges.com/music](https://www.brandtbridges.com/music?playlist=62899))
 
 ### High‑level flow
 1. Playlist listing
