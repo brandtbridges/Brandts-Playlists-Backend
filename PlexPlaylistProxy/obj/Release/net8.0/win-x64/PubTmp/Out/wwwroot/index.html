@@ -1,0 +1,54 @@
+﻿<!doctype html>
+<meta charset="utf-8" />
+<title>Plex MP3 Playlist</title>
+<style>
+    body {
+        font: 14px system-ui, sans-serif;
+        margin: 2rem;
+    }
+
+    .now {
+        margin-bottom: .5rem;
+    }
+
+    li {
+        cursor: pointer;
+        margin: .25rem 0;
+    }
+</style>
+
+<h2>Plex Playlist Player (Direct MP3)</h2>
+<div class="now" id="now">—</div>
+<audio id="player" controls></audio>
+<ol id="list"></ol>
+
+<script>
+    const playlistId = new URLSearchParams(location.search).get('playlist') || 'YOUR_PLAYLIST_ID';
+    const player = document.getElementById('player');
+    const list = document.getElementById('list');
+    const now = document.getElementById('now');
+    let tracks = [], idx = 0;
+
+    async function boot() {
+        const res = await fetch(`/api/playlist/${encodeURIComponent(playlistId)}`);
+        const data = await res.json();
+        tracks = data.tracks || [];
+        list.innerHTML = '';
+        tracks.forEach((t, i) => {
+            const li = document.createElement('li');
+            li.textContent = `${t.artist} — ${t.title}`;
+            li.onclick = () => play(i, true);
+            list.appendChild(li);
+        });
+        if (tracks.length) play(0, true);
+    }
+    function play(i, user) {
+        idx = i;
+        const t = tracks[i]; if (!t) return;
+        now.textContent = `${t.artist} — ${t.title}`;
+        player.src = t.streamUrl;
+        if (user) player.play();
+    }
+    player.addEventListener('ended', () => play((idx + 1) % tracks.length, true));
+    boot();
+</script>

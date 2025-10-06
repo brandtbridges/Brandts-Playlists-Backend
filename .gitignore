@@ -1,0 +1,6 @@
+# Visual Studio folder
+.vs/
+# Solution file
+*.sln
+# Generated publish folder
+publish/
